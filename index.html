@@ -10,11 +10,36 @@
   <link rel="manifest" href="manifest.json">
 
   <body>
+
+    <b>It is better to run this example in a incognito window (because of the service worker).</b>
+
+    <h2>Issue only with the serviceWorker in Chrome</h2>
+    <ul>
+      <li>The first time the application runs (no from service worker), 'Result' shows: <b>https://httpbin.org/get'</b></li>
+      <li>After reload (from service worker), 'Result' shows: <b>'https://httpbin.org/redirect-to?url=https://httpbin.org/get'</b></li>
+    </ul>
+
+    <h2>Result:</h2>
     <div id="result"></div>
+
+    <h3>Code executed on the window</h3>
+    <code>
+      var url = 'https://httpbin.org/redirect-to?url=https://httpbin.org/get';<br>
+      var xhr = new XMLHttpRequest();<br>
+      xhr.open('GET', url);<br>
+      xhr.addEventListener('load', () =&gt; {<br>
+      document.getElementById('result').textContent = xhr.responseURL;<br>
+      });<br>
+      xhr.send();<br>
+    </code>
+
+    <h3>Possible explanation</h3>
+    <p>It seems that `event.respondWith()` ignores the URL for requests when the request is resolved through a redirect (status 30*)</p>
+
     <noscript>Please enable JavaScript to continue using this application.</noscript>
     <script>
       // Register serviceWorker
-      navigator.serviceWorker.register('worker.js');
+      navigator.serviceWorker.register('./worker.js');
 
       // Make a request
       var url = 'https://httpbin.org/redirect-to?url=https://httpbin.org/get';
@@ -25,4 +50,5 @@
       });
       xhr.send();
     </script>
+
 </html>
