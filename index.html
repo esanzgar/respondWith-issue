@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>SwProblem</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+
+  <body>
+    <div id="result"></div>
+    <noscript>Please enable JavaScript to continue using this application.</noscript>
+    <script>
+      // Register serviceWorker
+      navigator.serviceWorker.register('worker.js');
+
+      // Make a request
+      var url = 'https://httpbin.org/redirect-to?url=https://httpbin.org/get';
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url);
+      xhr.addEventListener('load', () => {
+        document.getElementById('result').textContent = xhr.responseURL;
+      });
+      xhr.send();
+    </script>
+</html>
